@@ -407,7 +407,7 @@ function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
         cat("\nreading sequences ...")
     }
 
-    out <- read_spade(con = out, labels = itemLabels(data),
+    out <- read_sparse(con = out, labels = itemLabels(data),
 	transactions = 
 	    if (control@tidLists)
 		data,
@@ -429,6 +429,7 @@ function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
     }
     if (!control@summary)
         unlink("summary.out")
+    #unlink("sparse")
 
     out
 }
