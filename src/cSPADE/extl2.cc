@@ -9,7 +9,10 @@
 #include <fcntl.h>
 //#include <malloc.h>
 #include <strings.h>
- 
+#include <fstream>
+#include <vector>
+//#include <Eigen/Sparse>
+
 #include "extl2.h"
 #include "spade.h"
 
@@ -27,12 +30,20 @@ void bzero(void *s, size_t n) {
 
 #define seqitcntbufsz 4086
 
+//using namespace Eigen;
+
 int seqbuf[seqitcntbufsz];
 int seqpos=0;
 
 unsigned int ***set_sup, ***seq_sup;
 invdb *invDB;
 int EXTBLKSZ;
+
+//extern fstream SparseFile;
+//extern std::string nameFile;
+//extern int numFreqPatterns;
+//typedef Triplet<int> Trip;
+
 
 invdb::invdb(int sz)
 {
@@ -118,7 +129,7 @@ int cmp2it(const void *a, const void *b)
 void print_idlist(int *ival, int supsz)
 {
    int i, cid, cnt;
-
+//   std::vector<Trip> res;
    if (supsz > 0){
       cid = ival[0];
       cnt = 0;
@@ -128,11 +139,34 @@ void print_idlist(int *ival, int supsz)
             i+=2;
          }
          else{
-            cout << cid << " " << cnt << " ";
+
+            SparseFile.open(nameFile, ios::out | ios::binary | ios::app);
+//             res.push_back(Trip(cid, numFreqPatterns, cnt));
+
+            if(SparseFile.is_open()) {
+                SparseFile.write((const char *)&(cid), sizeof(int));
+                SparseFile.write((const char *)&(numFreqPatterns), sizeof(int));
+                SparseFile.write((const char *)&(cnt), sizeof(int));
+                SparseFile.close();
+            }
+
+            numNonZeroElements += 1;
+             cout << cid << " " << cnt << " ";
             cid = ival[i];
             cnt = 0;
          }
       }
+       SparseFile.open(nameFile, ios::out | ios::binary | ios::app);
+//             res.push_back(Trip(cid, numFreqPatterns, cnt));
+
+       if(SparseFile.is_open()) {
+           SparseFile.write((const char *)&(cid), sizeof(int));
+           SparseFile.write((const char *)&(numFreqPatterns), sizeof(int));
+           SparseFile.write((const char *)&(cnt), sizeof(int));
+           SparseFile.close();
+       }
+
+       numNonZeroElements += 1;
       cout << cid << " " << cnt;
    }
 }
@@ -214,9 +248,11 @@ int make_l1_pass()
 		cout << " " << ClassInfo::TMPE[j];
 	    cout << " ";
 	    if (print_tidlist) print_idlist(ival, supsz);
-	    cout << endl;
+             numFreqPatterns +=1;
+             cout << endl;
 	}
       }
+
    }
    //cout << "MAXCID " << tt << endl;
    //cout << "NUMFREQ " << F1::numfreq << endl;

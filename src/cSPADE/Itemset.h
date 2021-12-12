@@ -14,6 +14,10 @@
 #define GETBIT(a,b) ((a) & (01 << (b)))
 
 extern int NUMCLASS;
+extern fstream SparseFile;
+extern int numFreqPatterns;
+extern int numNonZeroElements;
+
 
 class Itemset{
 protected:

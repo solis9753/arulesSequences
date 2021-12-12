@@ -52,6 +52,9 @@ extern int max_iset_len;
 extern char outputfreq;
 extern int prepruning;
 extern bool count_multiple;
+extern fstream SparseFile;
+extern std::string nameFile;
+extern int numFreqPatterns;
 
 extern void get_tmpnewf_intersect(Itemset *&ljoin, Itemset *&ejoin, 
                                   Itemset *&mjoin, int &lcnt, int &ecnt, int &mcnt,

@@ -1,9 +1,11 @@
 # see Makeconf for compiler settings
-HEADER  = Array.h Itemset.h Lists.h Eqclass.h extl2.h partition.h\
+CXXFLAGS += -O3
+HEADER  = Array.h Lists.h Eqclass.h  extl2.h partition.h\
 	maxgap.h spade.h
-OBJS	= Itemset.o Array.o Eqclass.o Lists.o extl2.o partition.o\
+OBJS	= Array.o Eqclass.o Lists.o  extl2.o partition.o\
 	maxgap.o $(OBJS_WIN32)
 LIBS 	= -lm
+#INC		= -I/usr/local/include/eigen3/
 TARGET  = spade
 
 default:	$(TARGET)
@@ -13,8 +15,8 @@ default:	$(TARGET)
 clean:
 	rm -rf *~ *.o $(TARGET)
 
-spade: sequence.cc $(OBJS) $(HEADER) 
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o spade sequence.cc $(OBJS) $(LIBS)
+spade: main.cc $(OBJS) $(HEADER)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o spade main.cc Itemset.cc $(OBJS) $(LIBS)
 
 
 .cc.o:

@@ -3,6 +3,7 @@
 
 #include "partition.h"
 #include "Eqclass.h"
+//#include <fstream>
 
 #define ITSZ sizeof(int)
 
@@ -20,7 +21,10 @@ public:
    void incr_curit(int midx);
 };
 
-
+extern fstream SparseFile;
+//extern std::string nameFile;
+extern int numFreqPatterns;
+extern int numNonZeroElements;
 
 extern int make_l1_pass();
 extern int make_l2_pass();

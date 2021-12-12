@@ -1,5 +1,11 @@
+#include <fstream>
+
 #include <errno.h>
 #include "Itemset.h"
+#include <strings.h>
+#include "spade.h"
+
+
 extern char print_tidlist;
 
 Itemset::Itemset(int it_sz, int ival_sz, int nclass){
@@ -129,7 +135,8 @@ void Itemset::print_seq(int itempl)
       cout << " " << clsSup[i];
    cout << " ";
    if (print_tidlist) print_idlist();
-   cout << endl;
+    numFreqPatterns +=1;
+    cout << endl;
 }
 
 void Itemset::print_idlist()
@@ -145,11 +152,32 @@ void Itemset::print_idlist()
             i+=2;
          }
          else{
+             SparseFile.open(nameFile, ios::out | ios::binary | ios::app);
+
+             if(SparseFile.is_open()) {
+                 SparseFile.write((const char *)&(cid), sizeof(int));
+                 SparseFile.write((const char *)&(numFreqPatterns), sizeof(int));
+                 SparseFile.write((const char *)&(cnt), sizeof(int));
+                 SparseFile.close();
+             }
+
+             numNonZeroElements += 1;
             cout << cid << " " << cnt << " ";
             cid =(*theIval)[i];
             cnt = 0;
          }
       }
+       SparseFile.open(nameFile, ios::out | ios::binary | ios::app);
+//             res.push_back(Trip(cid, numFreqPatterns, cnt));
+
+       if(SparseFile.is_open()) {
+           SparseFile.write((const char *)&(cid), sizeof(int));
+           SparseFile.write((const char *)&(numFreqPatterns), sizeof(int));
+           SparseFile.write((const char *)&(cnt), sizeof(int));
+           SparseFile.close();
+       }
+
+       numNonZeroElements += 1;
       cout << cid << " " << cnt;
    }
 }
