@@ -255,6 +255,8 @@ makebin <- function(x, file) {
 ## note that we assume 1MB = 2^10 x 2^10 = 4^10 for the 
 ## computation of the number of database partitions.
 
+#' @export
+
 cspade <- 
 function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
 
@@ -436,6 +438,7 @@ function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
 
 ###
 
+#' @export
 cspade_old <- 
   function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
     
@@ -610,7 +613,7 @@ cspade_old <-
     }
     if (!control@summary)
       unlink("summary.out")
-    #unlink("sparse")
+      #unlink("sparse")
     
     out
   }
