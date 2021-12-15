@@ -429,9 +429,188 @@ function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
     }
     if (!control@summary)
         unlink("summary.out")
-    #unlink("sparse")
+        unlink("sparse")
 
     out
 }
 
 ###
+
+cspade_old <- 
+  function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
+    
+    ## workaround
+    if (.Platform$OS  == "windows" && 
+        .Platform$GUI == "Rgui")
+      system2 <- function(command, args = character(), stdout = "", ...) {
+        if (is.character(stdout) && nzchar(stdout)) {
+          args   <- c(args, ">", stdout)
+          stdout <- NULL
+        }
+        args <- c("/c", shQuote(command), args)
+        command <- Sys.getenv("COMSPEC")
+        ## bail out
+        if (!nzchar(command))
+          stop("environment variable 'COMSPEC' not set")
+        base::system2(command, args = args, stdout = stdout, ...)
+      }
+    
+    if (!inherits(data, "transactions"))
+      stop("'data' not of class transactions")
+    if (!all(c("sequenceID", "eventID") %in% names(transactionInfo(data))))
+      stop("transactionInfo: missing 'sequenceID' and/or 'eventID'")
+    ## optional
+    class <- transactionInfo(data)[['classID']]
+    if (!is.null(class)) {
+      names(class) <- transactionInfo(data)[['sequenceID']]
+      class <- class[!duplicated(names(class))]
+      class <- factor(class)
+    }
+    if (!all(dim(data))) 
+      return(new("sequences"))
+    parameter <- as(parameter, "SPparameter")
+    control   <- as(control ,  "SPcontrol")
+    
+    ## disable
+    if (length(parameter@maxwin)) {
+      parameter@maxwin <- integer()
+      warning("'maxwin' disabled")
+    }
+    
+    if (control@verbose) {
+      t1 <- proc.time()
+      cat("\nparameter specification:\n")
+      cat(.formatSP(parameter), sep = "\n")
+      cat("\nalgorithmic control:\n")
+      cat(.formatSP(control), sep = "\n")
+      cat("\npreprocessing ...")
+    }
+    
+    exe <- "bin"
+    if (.Platform$r_arch != "")
+      exe <- file.path(exe, .Platform$r_arch)
+    exe <- system.file(exe, package = "arulesSequences")
+    
+    file <- tempfile(pattern = "cspade", tmpdir)
+    on.exit(unlink(paste(file, "*", sep = ".")))
+    
+    ## preprocess
+    opt <- ""
+    nop <- ceiling((dim(data)[1] + 2 * length(data@data@i))
+                   * .Machine$sizeof.long / 4^10 / 5)
+    if (length(control@memsize)) {
+      opt <- paste("-m", control@memsize)
+      nop <- ceiling(nop * 32 / control@memsize)
+    }
+    if (length(control@numpart)) {
+      if (control@numpart < nop)
+        warning("'numpart' less than recommended")
+      nop <- control@numpart
+    }
+    ## workaround
+    out <- paste(file, "stdout", sep = ".")
+    ## deprecated
+    if (FALSE) {
+      asc <- paste(file, "asc", sep = ".")
+      write_cspade(data, con = asc)
+      if (system2(file.path(exe, "makebin"), args = c(
+        asc, paste(file, "data", sep = "."))) ||
+        system2(file.path(exe, "getconf"), args = c(
+          "-i", file, "-o", file), stdout = out)
+      ) stop("system invocation failed")
+      file.append("summary.out", out)
+    } else
+      makebin(data, file)
+    if (system2(file.path(exe, "exttpose"), args = c(
+      "-i", file, "-o", file, "-p", nop, opt, "-l -x -s",
+      parameter@support), stdout = out)
+    ) stop("system invocation failed")
+    file.append("summary.out", out)
+    
+    if (!is.null(class))
+      write_class(class, paste(file, "class", sep = "."))
+    
+    ## options
+    if (length(parameter@maxsize))
+      opt <- paste(opt, "-Z", parameter@maxsize, collapse = "")
+    if (length(parameter@maxlen))
+      opt <- paste(opt, "-z", parameter@maxlen,  collapse = "")
+    if (length(parameter@mingap))
+      opt <- paste(opt, "-l", parameter@mingap,  collapse = "")
+    if (length(parameter@maxgap))
+      opt <- paste(opt, "-u", parameter@maxgap,  collapse = "")
+    if (length(parameter@maxwin))
+      opt <- paste(opt, "-w", parameter@maxwin,  collapse = "")
+    
+    if (!length(control@bfstype) || !control@bfstype)
+      opt <- paste(opt, "-r", collapse = "")
+    if (control@tidLists)
+      opt <- paste(opt, "-y", collapse = "")
+    if (!is.null(class))
+      opt <- paste(opt, "-c", collapse = "")
+    
+    if (control@verbose) {
+      t2 <- proc.time()
+      du <- sum(file.info(list.files(path = dirname(file),
+                                     pattern = basename(file), full.names = TRUE))$size)
+      cat(paste("", nop, "partition(s),",
+                round(du / 4^10, digits = 2), "MB"))
+      cat(paste(" [",format((t2-t1)[3], digits =2, format = "f"),
+                "s]", sep = ""))
+      cat("\nmining transactions ...")
+    }
+    
+    out <- paste(file, "out", sep = ".")
+    ## workaround
+    tmp <- paste(file, "tpose", sep = ".")
+    if (nop > 1L)
+      tmp <- paste(tmp, "P0", sep = ".")
+    if (!file.exists(tmp))
+      local({
+        n <- readBin(paste(file, "conf", sep = "."), "integer") 
+        cat(file = out, 
+            sprintf("MINSUPPORT %s out of %s sequences\n", 
+                    ceiling(parameter@support * n), n)
+        )
+      })
+    else
+      if (system2(file.path(exe, "spade"), args = c(
+        "-i", file, "-s", parameter@support, opt, "-e", nop, "-o"), 
+        stdout = out)
+      ) stop("system invocation failed")
+    
+    if (control@verbose) {
+      t3 <- proc.time()
+      du <- file.info(out)$size
+      cat(paste("", round(du / 4^10, digits = 2), "MB"))
+      cat(paste(" [",format((t3-t2)[3], digits =2, format = "f"),
+                "s]", sep = ""))
+      cat("\nreading sequences ...")
+    }
+    
+    out <- read_spade(con = out, labels = itemLabels(data),
+                       transactions = 
+                         if (control@tidLists)
+                           data,
+                       class = class
+    ) 
+    
+    out@info <- c(
+      data = match.call()$data,
+      ntransactions = length(data),
+      out@info,
+      support = parameter@support
+    )
+    
+    if (control@verbose) {
+      t4 <- proc.time()
+      cat(paste(" [",format((t4-t3)[3], digits =2, format = "f"),
+                "s]", sep = ""))
+      cat("\n\ntotal elapsed time: ", (t4-t1)[3], "s\n", sep ="")
+    }
+    if (!control@summary)
+      unlink("summary.out")
+    #unlink("sparse")
+    
+    out
+  }
