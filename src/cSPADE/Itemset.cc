@@ -162,7 +162,7 @@ void Itemset::print_idlist()
              }
 
              numNonZeroElements += 1;
-            cout << cid << " " << cnt << " ";
+            //cout << cid << " " << cnt << " ";
             cid =(*theIval)[i];
             cnt = 0;
          }
@@ -178,7 +178,7 @@ void Itemset::print_idlist()
        }
 
        numNonZeroElements += 1;
-      cout << cid << " " << cnt;
+      //cout << cid << " " << cnt;
    }
 }
 

@@ -151,7 +151,7 @@ void print_idlist(int *ival, int supsz)
             }
 
             numNonZeroElements += 1;
-             cout << cid << " " << cnt << " ";
+            // cout << cid << " " << cnt << " ";
             cid = ival[i];
             cnt = 0;
          }
@@ -167,7 +167,7 @@ void print_idlist(int *ival, int supsz)
        }
 
        numNonZeroElements += 1;
-      cout << cid << " " << cnt;
+      //cout << cid << " " << cnt;
    }
 }
 
