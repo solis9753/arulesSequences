@@ -43,7 +43,7 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
   j <- 1
   for (i in seq(13, length(numBin), 12)) {
     rows[j] <- numBin[i] + numBin[i+1]*2^8 + numBin[i+2]*2^16 + numBin[i+3]*2^32
-    cols[j] <- numBin[i+4] + numBin[i+5]*2^8 + numBin[i+6]*2^16 + numBin[i+7]*2^32 + 1
+    cols[j] <- numBin[i+4] + numBin[i+5]*2^8 + numBin[i+6]*2^16 + numBin[i+7]*2^32 
     vars[j] <- numBin[i+8] + numBin[i+9]*2^8 + numBin[i+10]*2^16 + numBin[i+11]*2^32
     j <- j + 1
   }
