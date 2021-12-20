@@ -26,14 +26,20 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
       return(new("sequences", info = list(nsequences = n)))
 
     x <- strsplit(x, split = " -- ")
+  # First, read the first three elements  
+    bin <- readBin("sparse", "raw", 100)
+    
+    numBin <- as.numeric(bin)
+    numSeqs <- numBin[1] + numBin[2]*2^8 + numBin[3]*2^16 + numBin[4]*2^32
+    numFreqPat <- numBin[5] + numBin[6]*2^8 + numBin[7]*2^16 + numBin[8]*2^32
+    numNonZeroElem <- numBin[9] + numBin[10]*2^8 + numBin[11]*2^16 + numBin[12]*2^32
+    sizeOfFile <- 12*numNonZeroElem + 12
+    
   # need to better define where the output is
-  bin <- readBin("sparse", "raw", 10^6)
+  bin <- readBin("sparse", "raw", sizeOfFile)
   
   numBin <- as.numeric(bin)
-  numSeqs <- numBin[1] + numBin[2]*2^8 + numBin[3]*2^16 + numBin[4]*2^32
-  numFreqPat <- numBin[5] + numBin[6]*2^8 + numBin[7]*2^16 + numBin[8]*2^32
-  numNonZeroElem <- numBin[9] + numBin[10]*2^8 + numBin[11]*2^16 + numBin[12]*2^32
-  
+
   # For loop 
   # ffrom 13th element to the end of the file in increments of 12
   
@@ -43,6 +49,7 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
   j <- 1
   for (i in seq(13, length(numBin), 12)) {
     rows[j] <- numBin[i] + numBin[i+1]*2^8 + numBin[i+2]*2^16 + numBin[i+3]*2^32
+    # the + 1 in the following line is for cols variable starting from 1
     cols[j] <- numBin[i+4] + numBin[i+5]*2^8 + numBin[i+6]*2^16 + numBin[i+7]*2^32 + 1
     vars[j] <- numBin[i+8] + numBin[i+9]*2^8 + numBin[i+10]*2^16 + numBin[i+11]*2^32
     j <- j + 1
