@@ -205,10 +205,10 @@ setGeneric("ruleInfo",
 
 setMethod("ruleInfo", signature(object = "sequencerules"),
     function(object) object@ruleInfo)
-
+#' @export
 setGeneric("ruleInfo<-",
     function(object, value) standardGeneric("ruleInfo<-"))
-
+#' @export
 setReplaceMethod("ruleInfo", signature(object = "sequencerules"),
     function(object, value) {
         object@ruleInfo <- value
@@ -218,7 +218,7 @@ setReplaceMethod("ruleInfo", signature(object = "sequencerules"),
 )
 
 # fixme: extend to lhs and rhs statistics
-
+#' @export
 setClass("summary.sequencerules",
     representation(
         sizes   = "table",
@@ -226,7 +226,7 @@ setClass("summary.sequencerules",
     ),
     contains = "summary.associations"
 )
-
+#' @export
 setMethod("summary", signature(object = "sequencerules"),
     function(object) {
         if (!length(object))
@@ -248,7 +248,7 @@ setMethod("summary", signature(object = "sequencerules"),
                                      info    = object@info)
     }
 )
-
+#' @export
 setMethod("show", signature(object = "summary.sequencerules"),
     function(object) {
         cat("set of", object@length, "sequencerules with\n")
@@ -281,7 +281,7 @@ setMethod("show", signature(object = "summary.sequencerules"),
 ## NOTE that due to the backport to R_pnrindex 
 ##      itemsets instead of sequences are reported
 ##      in verbose mode.
-
+#' @export
 setMethod("ruleInduction", signature(x = "sequences"),
     function(x, transactions, confidence = 0.8, control = NULL) {
         if (confidence < 0 || confidence > 1)
@@ -431,7 +431,7 @@ setAs("sequencerules", "sequences",
 			 info      = from@info)
     }
 )
-
+#' @export
 setMethod("duplicated", signature(x = "sequencerules"),
     function(x, incomparables = FALSE) {
         i <- .Call(R_colAppend_sgCMatrix, x@lhs, x@rhs, TRUE)
@@ -439,10 +439,10 @@ setMethod("duplicated", signature(x = "sequencerules"),
         duplicated(i, incomparables)
     }
 )
-
+#' @export
 setMethod("unique", signature(x = "sequencerules"),
     function(x, incomparables = FALSE) x[!duplicated(x)])
-
+#' @export
 setMethod("match", signature(x = "sequencerules", table = "sequencerules"),
     function(x, table, nomatch = NA_integer_, incomparables = NULL) {
         k <- match(x@elements, table@elements)
@@ -465,7 +465,7 @@ setMethod("match", signature(x = "sequencerules", table = "sequencerules"),
         match(i, seq(table@Dim[2]), nomatch, incomparables)
     }
 )
-
+#' @export
 setMethod("c", signature(x = "sequencerules"),
     function(x, ..., recursive = FALSE) {
         args <- list(...)
@@ -507,7 +507,7 @@ setMethod("c", signature(x = "sequencerules"),
 )
 
 # why not define for associations in arules?
-
+#' @export
 setMethod("coverage", signature(x = "sequencerules"),
     function(x, transactions = NULL) {
 	if (!is.null(transactions))
@@ -520,7 +520,7 @@ setMethod("coverage", signature(x = "sequencerules"),
 )
 
 # fixme: we cannot dispatch as sequences.
-
+#' @export
 setMethod("subset", signature(x = "sequencerules"),
     function(x, subset) {
         if (missing(subset))
@@ -532,7 +532,7 @@ setMethod("subset", signature(x = "sequencerules"),
 )
 
 ##
-
+#' @export
 setMethod("is.redundant", signature(x = "sequencerules"),
     function(x, measure = "confidence") {
 	q <- quality(x)

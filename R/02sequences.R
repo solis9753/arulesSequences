@@ -7,7 +7,7 @@
 ## a blocker.
 ##
 ## ceeboo 2007, 2008, 2014, 2015
-
+#' @export
 setClass("sequences",
     representation(
         elements     = "itemsets",
@@ -37,7 +37,7 @@ setClass("sequences",
 )
 
 # no method for itemsets
-
+#' @export
 setMethod("nitems", signature(x = "sequences"), 
     function(x, itemsets = FALSE) {
         i <- .Call(R_rowSums_sgCMatrix, x@data) > 0
@@ -48,13 +48,13 @@ setMethod("nitems", signature(x = "sequences"),
         sum(i)
     }
 )
-
+#' @export
 setMethod("dim", signature(x = "sequences"),
     function(x) c(x@data@Dim[2], x@elements@items@data@Dim))
-
+#' @export
 setMethod("length", signature(x = "sequences"),
     function(x) dim(x@data)[2])
-
+#' @export
 setMethod("size", signature(x = "sequences"),
     function(x, type = c("size","itemsets","length","items")) {
         type <- match.arg(type)
@@ -82,10 +82,10 @@ setMethod("size", signature(x = "sequences"),
         )
     }
 ) 
-
+#' @export
 setGeneric("ritems",
     function(x, ...) standardGeneric("ritems"))
-
+#' @export
 setMethod("ritems", signature(x = "sequences"),
     function(x, type = c("min","max"), itemsets = FALSE) {
         type = match.arg(type)
@@ -107,7 +107,7 @@ setMethod("ritems", signature(x = "sequences"),
 )
 
 #
-
+#' @export
 setMethod("itemFrequency", signature(x = "sequences"),
     function(x, itemsets = FALSE, type = c("absolute", "relative")) {
         type <- match.arg(type)
@@ -125,10 +125,10 @@ setMethod("itemFrequency", signature(x = "sequences"),
                      "relative" = s / x@data@Dim[2])
     }
 )
-
+#' @export
 setGeneric("itemTable",
     function(x, ...) standardGeneric("itemTable"))
-
+#' @export
 setMethod("itemTable", signature(x = "sequences"),
     function(x, itemsets = FALSE) {
         if (itemsets)
@@ -151,7 +151,7 @@ setMethod("itemTable", signature(x = "sequences"),
 )
 
 ## reduce is experimental
-
+#' @export
 setMethod("[", signature(x = "sequences", i = "ANY", j = "ANY", drop = "ANY"),
     function(x, i, j, ..., reduce = FALSE, drop) {
         if (!missing(j))
@@ -176,7 +176,7 @@ setMethod("[", signature(x = "sequences", i = "ANY", j = "ANY", drop = "ANY"),
         x
     }
 )
-
+#' @export
 setAs("list", "sequences",
     function(from) {
         if (!length(from))
@@ -227,10 +227,10 @@ setAs("list", "sequences",
 			 ))
     }
 )
-
+#' @export
 setAs("sequences", "list",
     function(from) LIST(from, decode = TRUE))
-
+#' @export
 setMethod("LIST", signature(from = "sequences"),
     function(from, decode = TRUE) {
         d <- if (decode) 
@@ -252,7 +252,7 @@ setMethod("LIST", signature(from = "sequences"),
     paste(setStart, paste(x, collapse = itemSep), setEnd,
           collapse = "", sep = "")
 
-
+#' @export
 setMethod("labels", signature(object = "sequences"),
     function(object, setSep = ",", seqStart = "<", seqEnd = ">", decode = TRUE, ...) {
         object <- LIST(object, decode)
@@ -261,7 +261,7 @@ setMethod("labels", signature(object = "sequences"),
                setSep, seqStart, seqEnd)
     }
 )
-
+#' @export
 setMethod("itemLabels", signature(object = "sequences"),
     function(object, itemsets = FALSE, ...) {
         l <- itemLabels(object@elements)
@@ -272,14 +272,14 @@ setMethod("itemLabels", signature(object = "sequences"),
         l
     }
 )
-
+#' @export
 setReplaceMethod("itemLabels", signature(object = "sequences"),
     function(object, value) {
         itemLabels(object@elements@items) <- value
         object
     }
 )
-
+#' @export
 setAs("sequences", "data.frame",
     function(from) {
         if (!length(from))
@@ -294,7 +294,7 @@ setAs("sequences", "data.frame",
 )
 
 ##
-
+#' @export
 setMethod("inspect", signature(x = "sequences"),
     function(x, setSep = ",", seqStart = "<", seqEnd = ">", decode = TRUE) {
         if (!length(x))
@@ -356,13 +356,13 @@ setMethod("inspect", signature(x = "sequences"),
 )
 
 ##
-
+#' @export
 setGeneric("sequenceInfo",
     function(object, ...) standardGeneric("sequenceInfo"))
-
+#' @export
 setMethod("sequenceInfo", signature(object = "sequences"),
     function(object) object@sequenceInfo)
-
+#' @export
 setGeneric("sequenceInfo<-",
     function(object, value) standardGeneric("sequenceInfo<-"))
 
@@ -373,7 +373,7 @@ setReplaceMethod("sequenceInfo", signature(object = "sequences"),
         object
     }
 )
-
+#' @export
 setMethod("itemInfo", signature(object = "sequences"),
     function(object) itemInfo(object@elements))
 
@@ -383,15 +383,15 @@ setReplaceMethod("itemInfo", signature(object = "sequences"),
         object
     }
 )
-
+#' @export
 setGeneric("itemsets",
     function(x, ...) standardGeneric("itemsets"))
-
+#' @export
 setMethod("itemsets", signature(x = "sequences"),
     function(x) x@elements)
 
 # fixme: prototype?
-
+#' @export
 setClass("summary.sequences",
     representation(
         items    = "integer",
@@ -409,7 +409,7 @@ setClass("summary.sequences",
 	quality = table(NULL)
     )
 )
-
+#' @export
 setMethod("summary", signature(object = "sequences"),
     function(object, maxsum = 6) {
         if (!length(object))
@@ -448,7 +448,7 @@ setMethod("summary", signature(object = "sequences"),
 		tidLists = !is.null(object@tidLists))
     }
 )
-
+#' @export
 setMethod("show", signature(object = "summary.sequences"),
     function(object) {
         cat("set of", object@length, "sequences with\n")
@@ -479,6 +479,7 @@ setMethod("show", signature(object = "summary.sequences"),
 )
 
 ##
+#' @export
 setMethod("is.closed", signature(x = "sequences"),
     function(x) {
         support <- quality(x)$support
@@ -505,7 +506,7 @@ setMethod("is.closed", signature(x = "sequences"),
 )
 
 ##
-
+#' @export
 setMethod("is.maximal", signature(x = "sequences"),
     function(x) {
         u <- unique(x)
@@ -522,25 +523,25 @@ setMethod("is.maximal", signature(x = "sequences"),
 )
 
 ##
-
+#' @export
 setMethod("duplicated", signature(x = "sequences"),
     function(x, incomparables = FALSE)  {
         i <- .Call(R_pnindex, x@data, NULL, FALSE)
         duplicated(i, incomparables)
     }
 )
-
+#' @export
 setMethod("unique", signature(x = "sequences"),
     function(x, incomparables = FALSE) x[!duplicated(x)])
 
 ## note that %in% does no longer dispatch to match unless
 ## the right hand operand is not of the same class
-
+#' @export
 setMethod("%in%", signature(x = "sequences", table = "sequences"),
     function(x, table)
 	match(x, table, nomatch = 0L) > 0L
 )
-
+#' @export
 setMethod("match", signature(x = "sequences", table = "sequences"),
     function(x, table, nomatch = NA_integer_, incomparables = NULL) {
         k <- match(x@elements, table@elements)
@@ -561,14 +562,14 @@ setMethod("match", signature(x = "sequences", table = "sequences"),
 
 ## the semantics are wrong with respect to
 ## the usual behavior.
-
+#' @export
 setMethod("%in%", signature(x = "sequences", table = "character"),
     function(x, table) {
         k <- x@elements@items %in% table
         .Call(R_colSums_ngCMatrix, x@data[k,]) > 0
     }
 )
-
+#' @export
 setMethod("%pin%", signature(x = "sequences", table = "character"),
     function(x, table) {
         if (length(table) > 1)
@@ -577,7 +578,7 @@ setMethod("%pin%", signature(x = "sequences", table = "character"),
         .Call(R_colSums_ngCMatrix, x@data[k,]) > 0
     }
 )
-
+#' @export
 setMethod("%ain%", signature(x = "sequences", table = "character"),
     function(x, table) {
         p <- match(table, itemLabels(x@elements@items))
@@ -589,10 +590,10 @@ setMethod("%ain%", signature(x = "sequences", table = "character"),
         sapply(p, sum) >= length(table)
     }
 )
-
+#' @export
 setGeneric("%ein%",
     function(x, table) standardGeneric("%ein%"))
-
+#' @export
 setMethod("%ein%", signature(x = "sequences", table = "character"),
     function(x, table) {
         p <- x@elements@items %ain% table
@@ -620,7 +621,7 @@ setMethod("%ein%", signature(x = "sequences", table = "character"),
     }
     x
 }
-
+#' @export
 setMethod("c", signature(x = "sequences"),
     function(x, ..., recursive = FALSE) {
         args <- list(...)
@@ -659,7 +660,7 @@ setMethod("c", signature(x = "sequences"),
 )
 
 ## avoid uneccessary variables.
-
+#' @export
 setMethod("subset", signature(x = "sequences"),
     function(x, subset) {
         if (missing(subset))
@@ -669,7 +670,7 @@ setMethod("subset", signature(x = "sequences"),
         x[i]
     }
 )
-
+#' @export
 setMethod("tidLists", signature(x = "sequences"),
     function(x) x@tidLists
 )

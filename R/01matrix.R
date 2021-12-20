@@ -1,3 +1,5 @@
+#' Matrix
+#'
 ##
 ## sgCMatrix is designed to work with ptree but 
 ## otherwise does not deserve the qualifier Matrix.
@@ -6,6 +8,7 @@
 
 # fixme: special cases
 
+#' @export
 setClass("sgCMatrix",
     representation(
         p        = "integer",
@@ -23,14 +26,15 @@ setClass("sgCMatrix",
 
     validity = function(object) .Call(R_valid_sgCMatrix, object)
 )
-
+#' @export
 setMethod("dim", signature(x = "sgCMatrix"),
     function(x) x@Dim)
-
+#' @export
 setMethod("dimnames", signature(x = "sgCMatrix"),
     function(x) x@Dimnames)
-
+#' @export
 ## fixme: does not validate
+#' @export
 setReplaceMethod("dimnames", signature(x="sgCMatrix"),
     function(x, value) {
         if (is.null(value))
@@ -57,7 +61,7 @@ setReplaceMethod("dimnames", signature(x="sgCMatrix"),
         x
     }
 )
-
+#' @export
 setMethod("[", signature(x = "sgCMatrix", i = "ANY", j = "ANY", drop = "ANY"),
     function(x, i, j, ..., drop) {
         if (!missing(i))
@@ -70,7 +74,7 @@ setMethod("[", signature(x = "sgCMatrix", i = "ANY", j = "ANY", drop = "ANY"),
 )
 
 #
-
+#' @export
 setAs("list", "sgCMatrix",
     function(from) {
         if (!length(from))
@@ -87,7 +91,7 @@ setAs("list", "sgCMatrix",
                          Dimnames = list(levels(i), names(from)))
     }
 )
-
+#' @export
 setAs("sgCMatrix", "list",
     function(from) {
         i <- .Call(R_asList_ngCMatrix, from, from@Dimnames[[1]])
@@ -95,14 +99,14 @@ setAs("sgCMatrix", "list",
         i
     }
 )
-
+#' @export
 setAs("ngCMatrix", "sgCMatrix",
     function(from) {
         class(from) <- "sgCMatrix"
         from
     }
 )
-
+#' @export
 setMethod("show", signature(object = "sgCMatrix"),
     function(object) {
         cat(object@Dim[1], "x", object@Dim[2],

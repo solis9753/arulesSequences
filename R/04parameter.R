@@ -2,7 +2,7 @@
 ## this is definitely insane
 ##
 ## ceeboo 2007, 2008, 2014, 2015
-
+#' @export
 setGeneric("format")
 
 .list2S4 <- function(from, to) {
@@ -21,7 +21,7 @@ setGeneric("format")
     object$class <- NULL
     object
 }
-
+#' @export
 setClass("SPparameter",
     representation(
         support = "numeric",
@@ -53,7 +53,7 @@ setClass("SPparameter",
         TRUE
     }
 )
-
+#' @export
 setMethod("initialize", "SPparameter",
     function(.Object, support, ...) {
         if (!missing(support))
@@ -66,18 +66,22 @@ setMethod("initialize", "SPparameter",
         .Object
     }
 )
-
+#' @export
 setAs("NULL", "SPparameter",
     function(from, to) new(to))
+#' @export
 setAs("list", "SPparameter", 
     function(from, to) .list2S4(from , to))
+#' @export
 setAs("SPparameter", "list", 
     function(from) .S42list(from))
+#' @export
 setAs("SPparameter", "vector",
     function(from) unlist(as(from, "list")))
+#' @export
 setAs("SPparameter", "character", 
     function(from, to) unlist(lapply(as(from, "list"), as, class(to))))
-
+#' @export
 setAs("SPparameter", "data.frame",
     function(from) {
         from <- as(from, "character")
@@ -91,11 +95,11 @@ function(x, ...) {
     x <- as(x, "character")
     paste(format(names(x)), format(x, justify = "right"), sep = " : ")
 }
-
+#' @export
 setMethod("format", "SPparameter", 
     .formatSP
 )
-
+#' @export
 setMethod("show", signature(object = "SPparameter"),
     function(object) {
         out <- .formatSP(object)
@@ -109,7 +113,7 @@ setMethod("show", signature(object = "SPparameter"),
 
 ## notes: (1) for now, we do not provide the BFS switch.
 ##        (2) the implicit default memory size is 32MB.
-
+#' @export
 setClass("SPcontrol",
     representation(
         memsize = "integer",
@@ -132,7 +136,7 @@ setClass("SPcontrol",
         TRUE
     }
 )
-
+#' @export
 setMethod("initialize", "SPcontrol",
     function(.Object, ...) {
         args <- list(...)
@@ -143,18 +147,22 @@ setMethod("initialize", "SPcontrol",
         .Object
     }
 )
-
+#' @export
 setAs("NULL", "SPcontrol",
     function(from, to) new(to))
+#' @export
 setAs("list", "SPcontrol",
     function(from, to) .list2S4(from , to))
+#' @export
 setAs("SPcontrol", "list",
     function(from) .S42list(from))
+#' @export
 setAs("SPcontrol", "vector",
     function(from) unlist(as(from, "list")))
+#' @export
 setAs("SPcontrol", "character", 
     function(from, to) unlist(lapply(as(from, "list"), as, class(to))))
-
+#' @export
 setAs("SPcontrol", "data.frame",
     function(from) {
         from <- as(from, "character")
@@ -162,11 +170,11 @@ setAs("SPcontrol", "data.frame",
                    value = from, row.names = seq(from))
     }
 )
-
+#' @export
 setMethod("format", "SPcontrol",
     .formatSP
 )
-
+#' @export
 setMethod("show", signature(object = "SPcontrol"),
     function(object) {
         out <- .formatSP(object)

@@ -17,6 +17,7 @@
     x
 }
 
+#' @export
 read_baskets <- function(con, sep = "[ \t]+", info = NULL, iteminfo = NULL,
 			      encoding = "unknown") {
     x <- readLines(con, encoding = encoding)
