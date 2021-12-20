@@ -5,7 +5,9 @@ import("arules")
 
 export(
     "cspade",
-    "read_baskets"
+    "cspade_old", 
+    "read_baskets", 
+    "read_sparse"
 )
 
 exportClasses(
@@ -75,4 +77,3 @@ exportMethods(
 ##
 ## importFrom("utils", "head", "tail")
 importFrom("utils",  "type.convert")
-
