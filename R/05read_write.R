@@ -614,7 +614,7 @@ cspade_old <-
     }
     if (!control@summary)
       unlink("summary.out")
-      #unlink("sparse")
+      unlink("sparse")
     
     out
   }
