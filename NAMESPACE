@@ -5,8 +5,9 @@ import("arules")
 
 export(
     "cspade",
-    "cspade_old", 
+    "cspade_old",
     "read_baskets", 
+    "read_spade", 
     "read_sparse"
 )
 
@@ -15,7 +16,7 @@ exportClasses(
     "sequences", "summary.sequences",
     "sequencerules", "summary.sequencerules",
     "timedsequences", "summary.timedsequences",
-    "SPparameter", "SPcontrol"
+    "SPparameter", "SPcontrol", "customTidLists"
 )
 
 exportMethods(

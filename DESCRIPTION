@@ -13,22 +13,9 @@ NeedsCompilation: yes
 Packaged: 2020-05-15 11:05:02 UTC; buchta
 Repository: CRAN
 Date/Publication: 2020-05-17 07:46:01 UTC
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
 Imports: 
     arules,
     methods, 
     utils
-Collate: 
-    '01matrix.R'
-    '02sequences.R'
-    '03rules.R'
-    '04parameter.R'
-    '05read_write.R'
-    '101_b_read_sparse.R'
-    '101custom_Class.R'
-    '10timed.R'
-    '20support.R'
-    '30similarity.R'
-    'arulesSequences.R'
+
 
