@@ -15,7 +15,10 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
   # read the output
     n <- as.integer(strsplit(n, " ")[[1]][5])
 
-    x <- readLines(con)
+     x <- readLines(con)
+    # Changing the above line to 
+    # Changing back to the previous as con was non existent after read_tsv()
+    # x <- readr::read_tsv(con)
     # control not implemented (see the -t option)
     if (FALSE) {
       k <- grep("^PRUNE", x)
@@ -24,8 +27,11 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
     }
     if (!length(x))
       return(new("sequences", info = list(nsequences = n)))
-
-    x <- strsplit(x, split = " -- ")
+    # Changing function below too
+     x <- strsplit(x, split = " -- ", fixed = TRUE)
+    # Below is to work with readr::read_tsv()
+    # x <- strsplit(x[[colnames(x)[1]]], split = " -- ", fixed = TRUE)
+    
   # First, read the first three elements  
     bin <- readBin("sparse", "raw", 100)
     
@@ -72,7 +78,7 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
     #         sequences and their support counts (see
     #         the -y option).
     
-    c <- strsplit(sapply(x, "[", 2), split = " ")
+    c <- strsplit(sapply(x, "[", 2), split = " ", fixed = TRUE)
     if (!is.null(transactions)) {
       # k <- lapply(c, function(x, i)
       #   ## see NOTE 3)
@@ -102,7 +108,7 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
     # split into a list of lists (sequences) each 
     # containing a vector of character (itemsets)
     
-    x <- lapply(strsplit(sapply(x, "[", 1), split = " -> "), strsplit, " ")
+    x <- lapply(strsplit(sapply(x, "[", 1), split = " -> ", fixed = TRUE), strsplit, " ", fixed = TRUE)
     if (decode)
       x <- lapply(x, lapply, as.integer)
     
@@ -135,4 +141,4 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
     }
     validObject(x)
     x
-  }
+}
