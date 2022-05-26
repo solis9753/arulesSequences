@@ -123,7 +123,7 @@ table(size(s5[k == 0]))
 \dontrun{
 ## use generated data
 t <- read_baskets(con  = system.file("misc", "test.txt", package =
-				      "arulesSequences"),
+				      "arulesSequencesForkedCustom"),
 		  info = c("sequenceID", "eventID", "SIZE"))
 summary(t)
 ## use low support

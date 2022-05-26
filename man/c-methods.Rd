@@ -49,7 +49,7 @@
 }
 \examples{
 ## continue example
-example(ruleInduction, package = "arulesSequences")
+example(ruleInduction, package = "arulesSequencesForkedCustom")
 s <- c(s1, s2)
 s
 match(unique(s), s1)

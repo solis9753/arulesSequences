@@ -106,7 +106,7 @@
 }
 \examples{
 ## continue example
-example(ruleInduction, package = "arulesSequences")
+example(ruleInduction, package = "arulesSequencesForkedCustom")
 
 ## matching a pattern
 as(subset(s2, size(x) > 1), "data.frame")

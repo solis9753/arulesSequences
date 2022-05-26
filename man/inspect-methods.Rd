@@ -97,7 +97,7 @@ itemLabels(object) <- value
 }
 \examples{
 ## continue example
-example(ruleInduction, package = "arulesSequences")
+example(ruleInduction, package = "arulesSequencesForkedCustom")
 
 ## stacked style
 inspect(s2)

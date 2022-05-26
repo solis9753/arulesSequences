@@ -57,7 +57,7 @@ read_baskets(con, sep = "[ \t]+", info = NULL, iteminfo = NULL,
 \examples{
 ## read example data
 x <- read_baskets(con  = system.file("misc", "zaki.txt", package = 
-                                     "arulesSequences"),
+                                     "arulesSequencesForkedCustom"),
 		  info = c("sequenceID","eventID","SIZE"))
 as(x, "data.frame")
 

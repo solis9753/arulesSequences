@@ -90,7 +90,7 @@ timeInfo(object) <- value
 }
 \examples{
 ## continue example
-example(ruleInduction, package = "arulesSequences")
+example(ruleInduction, package = "arulesSequencesForkedCustom")
 
 ## empty
 sequenceInfo(s2) <- sequenceInfo(s2)
