@@ -16,7 +16,7 @@ clean:
 	rm -rf *~ *.o $(TARGET)
 
 spade: main.cc $(OBJS) $(HEADER)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o spade main.cc Itemset.cc $(OBJS) $(LIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o spade main.cc $(OBJS) $(LIBS)
 
 
 .cc.o:
