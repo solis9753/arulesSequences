@@ -19,7 +19,7 @@ extern SEXP R_pnsclosed(SEXP R_x, SEXP R_e, SEXP R_c, SEXP R_v);
 extern SEXP R_pnsredundant(SEXP R_x, SEXP R_e, SEXP R_c, SEXP R_v);
 extern SEXP R_pnssuperset(SEXP R_x, SEXP R_y, SEXP R_e, SEXP R_p, SEXP R_v);
 
-void R_init_arulesSequences(DllInfo *dll) {
+void R_init_arulesSequencesForkedCustom(DllInfo *dll) {
 
     const R_CallMethodDef CallEntries[] = {
 	{"R_makebin",		    (DL_FUNC) R_makebin,		2},
