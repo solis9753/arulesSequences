@@ -31,7 +31,7 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
      x <- strsplit(x, split = " -- ", fixed = TRUE)
     # Below is to work with readr::read_tsv()
     # x <- strsplit(x[[colnames(x)[1]]], split = " -- ", fixed = TRUE)
-    
+     if (!is.null(transactions)) {
   # First, read the first three elements  
     bin <- readBin("sparse", "raw", 100)
     
@@ -68,7 +68,7 @@ read_sparse <- function(con = "", decode = FALSE, labels = NULL, transactions = 
   k_custom <- Matrix::sparseMatrix(i = rows, j = cols, x = vars)
   k_custom <- as(k_custom, "ngCMatrix")
   
-    
+}  
     # NOTE 1) position 1 contains the support count.
     #      2) the following K positions contain the 
     #         support counts of a partition (see the 

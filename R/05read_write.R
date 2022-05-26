@@ -310,7 +310,7 @@ function(data, parameter = NULL, control = NULL, tmpdir = tempdir()) {
     exe <- "bin"
     if (.Platform$r_arch != "")
 	exe <- file.path(exe, .Platform$r_arch)
-    exe <- system.file(exe, package = "arulesSequences")
+    exe <- system.file(exe, package = "arulesSequencesForkedCustom")
 
     file <- tempfile(pattern = "cspade", tmpdir)
     on.exit(unlink(paste(file, "*", sep = ".")))
@@ -491,7 +491,7 @@ cspade_old <- function(data, parameter = NULL, control = NULL, tmpdir = tempdir(
   exe <- "bin"
   if (.Platform$r_arch != "")
     exe <- file.path(exe, .Platform$r_arch)
-  exe <- system.file(exe, package = "arulesSequences")
+  exe <- system.file(exe, package = "arulesSequencesForkedCustom")
   
   file <- tempfile(pattern = "cspade", tmpdir)
   on.exit(unlink(paste(file, "*", sep = ".")))
