@@ -1,7 +1,8 @@
-useDynLib("arulesSequences", .registration = TRUE)
+useDynLib("arulesSequencesForkedCustom", .registration = TRUE)
 
 import("methods")
 import("arules")
+importFrom("readr", "read_tsv")
 
 export(
     "cspade",
