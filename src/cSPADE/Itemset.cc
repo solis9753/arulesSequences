@@ -142,7 +142,7 @@ void Itemset::print_seq(int itempl)
 void Itemset::print_idlist()
 {
    int i, cid, cnt;
-
+   SparseFile.open(nameFile, ios::out | ios::binary | ios::app);
    if (theIval && theIval->size() > 0){
       cid = (*theIval)[0];
       cnt = 0;
@@ -152,8 +152,6 @@ void Itemset::print_idlist()
             i+=2;
          }
          else{
-             SparseFile.open(nameFile, ios::out | ios::binary | ios::app);
-
              if(SparseFile.is_open()) {
                  SparseFile.write((const char *)&(cid), sizeof(int));
                  SparseFile.write((const char *)&(numFreqPatterns), sizeof(int));
@@ -174,11 +172,12 @@ void Itemset::print_idlist()
            SparseFile.write((const char *)&(cid), sizeof(int));
            SparseFile.write((const char *)&(numFreqPatterns), sizeof(int));
            SparseFile.write((const char *)&(cnt), sizeof(int));
-           SparseFile.close();
+
        }
 
        numNonZeroElements += 1;
       //cout << cid << " " << cnt;
    }
+   SparseFile.close();
 }
 
